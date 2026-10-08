@@ -1,0 +1,7 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# Keep repository changes inside the workspace and ask before operations that
+# need broader access. User, workspace, or organization policy may be stricter.
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+

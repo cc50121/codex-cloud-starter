@@ -1,0 +1,34 @@
+name: Validate starter
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check shell syntax
+        run: bash -n .devcontainer/post-create.sh scripts/*.sh
+
+      - name: Check dev container JSON
+        run: python -m json.tool .devcontainer/devcontainer.json > /dev/null
+
+      - name: Check Codex TOML
+        run: |
+          python - <<'PY'
+          import tomllib
+          from pathlib import Path
+
+          with Path('.codex/config.toml').open('rb') as config_file:
+              tomllib.load(config_file)
+          PY
+
+      - name: Run template checks
+        run: bash scripts/check.sh
+
